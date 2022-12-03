@@ -3,25 +3,30 @@
   let mainInput = document.querySelector(".main-input");
   let allLines = document.querySelectorAll(".line");
   let result = document.querySelector(".display-result");
-  let counter = 0;//points
-  let allText = [];//all pickup words in function chooseText
   let newWord;
+  let stopGameDisplay = document.querySelector(".stop-game");
+  let finalScore = document.querySelector(".score span");
+  let playAgainBtn = document.querySelector(".play-again-btn");
+  //setup
+  let allText = []; //all pickup words in function chooseText
+  let counter = 0; //points
+  let speed = 1; // one step
+  let textLength = 3; //word length
+  let typingWords = words.filter((word) => word.length === textLength); //currently words
+  let level = 6; //optional
 
   startBtn.addEventListener("click", startGame);
-  window.addEventListener("keyup",startGame);
+  window.addEventListener("keyup", startGame);
 
   function startGame() {
+    stopGameDisplay.style.display = "none";
     mainInput.focus();
-    window.removeEventListener('keyup',startGame);  
+    window.removeEventListener("keyup", startGame);
+    window.onkeyup = "";
     startBtn.style.display = "none";
 
     mainInput.addEventListener("keyup", checkInput);
 
-    //setup
-    let speed = 1;// one step
-    let textLength = 3;//word length
-    let typingWords = words.filter((word) => word.length === textLength);//currently words
-    let level = 6;//optional
     let speedUp = setInterval(() => {
       textLength++;
       typingWords = words.filter((word) => word.length === textLength);
@@ -40,6 +45,8 @@
         let position = parseInt(window.getComputedStyle(element).left);
         if (position > 850) {
           clearAllIntervals();
+          stopGame();
+          finalScore.innerHTML = counter;
         } else if (position > 650) {
           element.style.background = "tomato";
         }
@@ -59,7 +66,6 @@
             word.style.background = "green";
             result.innerHTML = counter;
             e.target.value = "";
-
             setTimeout(() => {
               disappear(word);
             }, 200);
@@ -96,6 +102,27 @@
       typingWords.splice(rand, 1);
 
       return word;
+    }
+
+    function stopGame() {
+      //display game over
+      stopGameDisplay.style.display = "grid";
+
+      //reset all settings and remove all spans
+      allText = []; //all pickup words in function chooseText
+      counter = 0; //points
+      textLength = 3; //word length
+      typingWords = words.filter((word) => word.length === textLength); //currently words
+      let spans = document.querySelectorAll(".word");
+      spans.forEach((span) => span.remove());
+
+      //start again game
+      playAgainBtn.onclick = () => {
+        startGame();
+      };
+      window.onkeyup = () => {
+        startGame();
+      };
     }
   }
 })();
