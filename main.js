@@ -7,13 +7,6 @@
   let stopGameDisplay = document.querySelector(".stop-game");
   let finalScore = document.querySelector(".score span");
   let playAgainBtn = document.querySelector(".play-again-btn");
-  //setup
-  let allText = []; //all pickup words in function chooseText
-  let counter = 0; //points
-  let speed = 1; // one step
-  let textLength = 3; //word length
-  let typingWords = words.filter((word) => word.length === textLength); //currently words
-  let level = 6; //optional
 
   startBtn.addEventListener("click", startGame);
   window.addEventListener("keyup", startGame);
@@ -24,6 +17,16 @@
     window.removeEventListener("keyup", startGame);
     window.onkeyup = "";
     startBtn.style.display = "none";
+    //setup
+    mainInput.value="";
+    let allText = []; //all pickup words in function chooseText
+    let counter = 0; //points
+    let speed = 1 ; // one step
+    let textLength = 3; //word length
+    let typingWords = words.filter((word) => word.length === textLength); //currently words
+    let level = 6; //optional
+
+   
 
     mainInput.addEventListener("keyup", checkInput);
 
@@ -107,15 +110,8 @@
     function stopGame() {
       //display game over
       stopGameDisplay.style.display = "grid";
-
-      //reset all settings and remove all spans
-      allText = []; //all pickup words in function chooseText
-      counter = 0; //points
-      textLength = 3; //word length
-      typingWords = words.filter((word) => word.length === textLength); //currently words
       let spans = document.querySelectorAll(".word");
       spans.forEach((span) => span.remove());
-
       //start again game
       playAgainBtn.onclick = () => {
         startGame();
